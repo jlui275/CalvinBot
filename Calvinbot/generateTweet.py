@@ -7,6 +7,7 @@ from random import randint
 import time
 from tweepy import OAuthHandler
 import preprocessor as p
+import sys
 
 # Calls the twitter api to send out a tweet
 def send_tweet(tweet, api):
@@ -59,6 +60,8 @@ def compareWithOriginal(tweet_database):
                 dup += 1
                 dup_found = True
         if dup_found == False:
+            p.set_options(p.OPT.URL)
+            tweet = p.clean(tweet)
             newlist.append(tweet)
         num += 1
         print('...Looped through {}/{} tweets and found {} duplicates'.format(num, len(tweet_database), dup))
@@ -120,16 +123,15 @@ def authenticate():
     return api
 
 
-def generateAndSendTweet(api):
+def generateAndSendTweet(api, send):
     if generateTweets() == True:
         tweet_database = cleanGeneratedTweet()
         if len(tweet_database) != 0:
             tweet = chooseRandomTweet(tweet_database)
             if tweet != "":
-                p.set_options(p.OPT.URL)
-                tweet = p.clean(tweet)
                 print(tweet)
-                send_tweet(tweet, api)
+                if send == True:
+                    send_tweet(tweet, api)
             else:
                 print("ERROR: Tweet not populated.")
         else:
@@ -139,4 +141,14 @@ def generateAndSendTweet(api):
 
 
 api = authenticate()
-generateAndSendTweet(api)
+
+# If second argument is True and there are only two arguments, it'll generate a new batch of tweets and send a random one out
+if(sys.argv[1] == 'True'):
+    if len(sys.argv) == 2:
+        generateAndSendTweet(api, True)
+# If there are three arguments, the last argument will be the tweet that we want to send out
+    elif isinstance(sys.argv[3], str):
+        send_tweet(sys.argv[3], api)
+# Check for a second argument is false, we'll just generate a new set of tweets but won't update status
+elif sys.argv[1] == 'False':
+    generateAndSendTweet(api, False)
