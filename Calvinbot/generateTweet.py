@@ -35,6 +35,32 @@ def generateTweets():
     else:
         return False
 
+# Compares with the training data to make sure it generates unique tweets
+def compareWithOriginal(tweet_database):
+    orig_tweet = []
+    # stores all the original tweets used to train in orig_tweet list
+    with open('./twitterScrubber/cleanData/new_FakeKenty_tweets_clean_train.txt', 'r', encoding='utf-8') as fp:
+        tweet = fp.readline()
+        while tweet:
+            # Looks for actual tweets
+            if tweet.strip() != "==========":
+                orig_tweet.append(tweet)
+            
+            tweet = fp.readline()
+
+    # compare with tweets generated from gpt-2 and take out duplicates
+    num = 0
+    dup = 0
+    for tweet in tweet_database:
+        for o in orig_tweet:
+            if tweet == o:
+                tweet_database.remove(o)
+                dup += 1
+        num += 1
+        print('...Looped through {}/{} tweets and found {} duplicates'.format(num, len(tweet_database), dup))
+
+    return tweet_database
+
 # Cleans the generated tweets. Mainly looks for the n-word and gets rid of delimiters
 # Outputs valid tweets to output file
 # Returns a list of all valid tweets
