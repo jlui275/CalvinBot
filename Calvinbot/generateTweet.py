@@ -51,15 +51,19 @@ def compareWithOriginal(tweet_database):
     # compare with tweets generated from gpt-2 and take out duplicates
     num = 0
     dup = 0
+    newlist = []
     for tweet in tweet_database:
+        dup_found = False
         for o in orig_tweet:
             if tweet == o:
-                tweet_database.remove(o)
                 dup += 1
+                dup_found = True
+        if dup_found == False:
+            newlist.append(tweet)
         num += 1
         print('...Looped through {}/{} tweets and found {} duplicates'.format(num, len(tweet_database), dup))
 
-    return tweet_database
+    return newlist
 
 # Cleans the generated tweets. Mainly looks for the n-word and gets rid of delimiters
 # Outputs valid tweets to output file
