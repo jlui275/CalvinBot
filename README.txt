@@ -1,0 +1,1 @@
+This is the top-level directory of the project. This project contains two project. The first being a twitter scrubber which scrubs tweets from a timeline and cleans the tweets to input to our gpt-2 neural network script. The second being our gpt-2 neural network script that generates tweets and send it through the twitter api to update the status of our TwitterBot.
