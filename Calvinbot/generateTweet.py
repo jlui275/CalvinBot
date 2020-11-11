@@ -79,7 +79,7 @@ def cleanGeneratedTweet():
             # Looks for real tweets and puts them into a list
             if tweet.strip() != "==========":
                 # Replaces N-word with bro and pushes it to the back of the list
-                tweet = re.sub('(n|i){1,32}((g{2,32}|q){1,32}|[gq]{2,32})[e3r]{1,32}', 'bro', tweet)
+                tweet = re.sub('(n|i){1,32}((g{2,32}|q){1,32}|[gq]{2,32})[e3ras]{1,32}', 'bro', tweet)
                 tweet_database.append(tweet)
             tweet = fp.readline()
             if len(tweet_database) % 10 == 0:
@@ -147,8 +147,9 @@ if(sys.argv[1] == 'True'):
     if len(sys.argv) == 2:
         generateAndSendTweet(api, True)
 # If there are three arguments, the last argument will be the tweet that we want to send out
-    elif isinstance(sys.argv[3], str):
-        send_tweet(sys.argv[3], api)
+    elif sys.argv[2] == '--user':
+        tweet = input("Enter tweet: ")
+        send_tweet(tweet, api)
 # Check for a second argument is false, we'll just generate a new set of tweets but won't update status
 elif sys.argv[1] == 'False':
     generateAndSendTweet(api, False)
